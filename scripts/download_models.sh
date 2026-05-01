@@ -8,7 +8,7 @@
 # ============================================================
 
 # ⚠️ 請替換為你的 GitHub 用戶名和 repo 名稱
-GITHUB_USER="your-username"
+GITHUB_USER="Shuai-876"
 REPO_NAME="aiot-genio1200"
 BRANCH="main"
 
