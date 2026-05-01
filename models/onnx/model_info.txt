@@ -1,0 +1,43 @@
+模型資訊
+========
+
+檔案名稱：last_173epoch.onnx
+大小：~10.2 MB
+訓練輪數：173 epochs
+框架：YOLOv8n (Ultralytics)
+ONNX opset：19
+
+輸入規格
+--------
+名稱：images
+形狀：[1, 3, 640, 640]  (batch, channels, height, width)
+類型：float32
+範圍：[0.0, 1.0]
+
+輸出規格
+--------
+名稱：output0
+形狀：[1, 10, 8400]  (batch, 4_bbox + 6_classes, anchors)
+類型：float32
+
+類別對應
+--------
+0: people with helmet (pwh)
+1: people with vest (pwv)
+2: people no helmet (pnh)
+3: people no vest (pnv)
+4: police
+5: people with vest new (pwv1)
+
+後處理說明
+----------
+- 輸出格式：[cx, cy, w, h, cls0_score, cls1_score, ..., cls5_score]
+- 轉為 x1,y1,x2,y2 後做 NMS
+- 建議信心度閾值：0.35（依 F1 曲線，最佳在 0.308）
+- 建議 IOU 閾值：0.45
+
+Genio 1200 部署
+---------------
+NNStreamer 使用方式（onnxruntime 後端）：
+  framework=onnxruntime
+  model=/home/root/models/last_173epoch.onnx
