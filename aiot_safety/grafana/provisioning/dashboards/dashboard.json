@@ -1,0 +1,59 @@
+{
+  "description": "YOLO 工地安全偵測監控",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["aiot", "safety"],
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "title": "AIoT 工地安全偵測儀表板",
+  "uid": "aiot-detection-trend",
+  "version": 1,
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "各類別偵測次數（每分鐘）",
+      "description": "橫軸=時間，縱軸=偵測個數，每條線代表一個偵測類別",
+      "gridPos": { "h": 24, "w": 24, "x": 0, "y": 0 },
+      "datasource": { "type": "postgres", "uid": "aiot-postgresql" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 8,
+            "gradientMode": "none",
+            "showPoints": "auto",
+            "pointSize": 5,
+            "spanNulls": false
+          },
+          "unit": "short",
+          "min": 0,
+          "decimals": 0
+        }
+      },
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": ["sum", "max", "mean"],
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "aiot-postgresql" },
+          "rawSql": "SELECT\n  \"時間\" AS \"time\",\n  label0 AS \"pwh(戴安全帽)\",\n  label1 AS \"pwv(穿反光衣)\",\n  label2 AS \"pnh(未戴安全帽)\",\n  label3 AS \"pnv(未穿反光衣)\",\n  label4 AS \"police(警察)\",\n  label5 AS \"pwv1(穿反光衣2)\"\nFROM \"DetectionStats\"\nWHERE $__timeFilter(\"時間\")\nORDER BY \"時間\"",
+          "format": "time_series",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: AIoT Safety
+    type: file
+    folder: AIoT
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

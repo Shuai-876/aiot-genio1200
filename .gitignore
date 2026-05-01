@@ -1,0 +1,37 @@
+# 依賴
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# 環境變數
+.env
+.env.local
+.env.*.local
+
+# 日誌
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 資料庫
+*.db
+*.sqlite
+*.sqlite3
+
+# 模型（除了必要的）
+*.pt
+runs/
+
+# 構建產物
+dist/
+build/

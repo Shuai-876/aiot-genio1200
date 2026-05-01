@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIoT Safety Monitor | 安全稽核儀表板</title>
+    <meta name="description" content="Real-time AIoT safety detection and audit dashboard" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <div class="logo-title">AIoT Safety Monitor</div>
+            <div class="logo-sub">安全稽核儀表板</div>
+          </div>
+        </div>
+      </div>
+      <div class="header-center">
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date">----/--/--</div>
+      </div>
+      <div class="header-right">
+        <div class="status-pill" id="apiStatus">
+          <span class="status-dot"></span>
+          <span class="status-text">連線中...</span>
+        </div>
+        <button class="btn-audit" id="btnAudit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
+          產生稽核報告
+        </button>
+      </div>
+    </header>
+
+    <!-- Stat Cards -->
+    <section class="stats-row">
+      <div class="stat-card" id="statTotal">
+        <div class="stat-icon cyan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-label">今日偵測總次數</div>
+          <div class="stat-value" id="valTotal">—</div>
+        </div>
+        <div class="stat-trend" id="trendTotal"></div>
+      </div>
+      <div class="stat-card" id="statClasses">
+        <div class="stat-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-label">偵測類別數</div>
+          <div class="stat-value" id="valClasses">—</div>
+        </div>
+      </div>
+      <div class="stat-card" id="statTop">
+        <div class="stat-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-label">最高頻類別</div>
+          <div class="stat-value small" id="valTop">—</div>
+        </div>
+      </div>
+      <div class="stat-card" id="statAudit">
+        <div class="stat-icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-label">最近稽核</div>
+          <div class="stat-value small" id="valAudit">—</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Grid -->
+    <main class="main-grid">
+      <!-- Detection Feed -->
+      <section class="panel feed-panel">
+        <div class="panel-header">
+          <h2>即時偵測串流</h2>
+          <div class="refresh-badge">
+            <span class="pulse-ring"></span>
+            <span>每 5 秒更新</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="detection-table">
+            <thead>
+              <tr>
+                <th>時間</th>
+                <th>類別</th>
+                <th>信心度</th>
+                <th>裝置</th>
+              </tr>
+            </thead>
+            <tbody id="detectionBody">
+              <tr class="placeholder-row">
+                <td colspan="4">載入中...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Chart -->
+      <section class="panel chart-panel">
+        <div class="panel-header">
+          <h2>今日類別分佈</h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="chart-legend" id="chartLegend"></div>
+      </section>
+
+      <!-- Audit History -->
+      <section class="panel audit-panel">
+        <div class="panel-header">
+          <h2>稽核報告紀錄</h2>
+          <span class="badge" id="auditCount">0 筆</span>
+        </div>
+        <div class="audit-list" id="auditList">
+          <div class="empty-state">尚無稽核報告</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

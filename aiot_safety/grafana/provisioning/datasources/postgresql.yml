@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: PostgreSQL
+    type: postgres
+    uid: aiot-postgresql
+    url: host.docker.internal:5432
+    database: aiotdb
+    user: postgres
+    secureJsonData:
+      password: postgres123
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1500
+      timescaledb: false
+    isDefault: true
+    editable: true
